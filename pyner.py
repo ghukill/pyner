@@ -60,15 +60,15 @@ class TaggedDoc(object):
 
 			# locations
 			if tag[1] == 'LOCATION':
-				self.locations.append(" ".join(tag[0]))
+				self.locations.append(tag[0])
 
 			# people
 			if tag[1] == 'PERSON':
-				self.people.append(" ".join(tag[0]))
+				self.people.append(tag[0])
 
 			# organization
 			if tag[1] == 'ORGANIZATION':
-				self.organizations.append(" ".join(tag[0]))
+				self.organizations.append(tag[0])
 
 		# report
 		print "took %ss to analyze" % (time.time()-stime)
@@ -87,14 +87,14 @@ class TaggedDoc(object):
 					expect = tag
 				else:
 					run = [value]
-					result.append((run,last_tag))
+					result.append((" ".join(run), last_tag))
 			else:
 				if len(run) > 0:
-					result.append((run,last_tag))
+					result.append((" ".join(run), last_tag))
 				expect = None
 				run = []
 		if len(run) > 0:
-			result.append((run,last_tag))
+			result.append((" ".join(run), last_tag))
 		return result
 
 
@@ -102,12 +102,8 @@ class TaggedDoc(object):
 
 		with open(output_file_path,'w') as f:
 			writer = csv.writer(f, delimiter=',')
-			for location in set(self.locations):
-				writer.writerow([location,'LOCATION'])
-			for person in set(self.people):
-				writer.writerow([person,'PERSON'])	
-			for organization in self.organizations:
-				writer.writerow([organization,'ORGANIZATION'])
+			for tag in self.tags:
+				writer.writerow(tag)
 
 
 
