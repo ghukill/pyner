@@ -7,7 +7,7 @@ Python NER utility
 
 ## Stanford's NER dependency
 
-[Download Stanfoard's NER library](https://nlp.stanford.edu/software/CRF-NER.shtml#Download).  Unzip to `stanford_ner` folder in this repository.
+[Download Stanfoard's NER library](https://nlp.stanford.edu/software/CRF-NER.shtml#Download).  Unzip to `stanford_ner` folder wherever you clone this repository.
 
 ## Initialize NLTK with Stanford NER
 
@@ -24,15 +24,15 @@ You can then analyze documents with the `TaggedDoc` class from `pyner.py`.
 Optionally, you can also pass a function to filter/clean tags before returning from `.analyze()`, a la:
 
     def tag_cleaner_example(tags):
-    # loop through to remove instances of "kodak"
-    tags[:] = [tag for tag in tags if 'kodak' not in tag[0].lower()]
-    tags[:] = [tag for tag in tags if 'color control patches' not in tag[0].lower()]
-    # loop through and remove trailing puncuation
-    for tag in tags:
-        tag = (tag[0].rstrip("."), tag[1])
-        tag = (tag[0].rstrip(","), tag[1])
-    # remove dupes and return
-    return list(set(tags))
+        # loop through to remove instances of "kodak"
+        tags[:] = [tag for tag in tags if 'kodak' not in tag[0].lower()]
+        tags[:] = [tag for tag in tags if 'color control patches' not in tag[0].lower()]
+        # loop through and remove trailing puncuation
+        for tag in tags:
+            tag = (tag[0].rstrip("."), tag[1])
+            tag = (tag[0].rstrip(","), tag[1])
+        # remove dupes and return
+        return list(set(tags))
 
     doc.analyze(tag_filter = tag_cleaner_example)
 
