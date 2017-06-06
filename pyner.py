@@ -9,22 +9,22 @@ st = StanfordNERTagger('./stanford_ner/classifiers/english.all.3class.distsim.cr
 class TaggedDoc(object):
 
 
-	def __init__(self, payload, payload_type=False):
+	def __init__(self, payload, is_file=False):
 
 		self.payload = payload
-		self.payload_type = payload_type
+		self.is_file = is_file
 		self.tags = None
 		self.locations = []
 		self.people = []
 		self.organizations = []
 
 
-	def analyze(self):
+	def analyze(self, tag_filter=False):
 
 		stime = time.time()
 
 		# file path provided
-		if self.payload_type == 'file':
+		if self.is_file:
 			with open(self.payload, 'r') as f:
 				self.tags = st.tag(f.read().split())
 		# assume raw text
@@ -55,6 +55,10 @@ class TaggedDoc(object):
 		# group tags
 		self.tags = self._group_consecutives(self.tags)
 
+		# run optional filter function
+		if tag_filter:
+			self.tags = tag_filter(self.tags)
+
 		# parse
 		for tag in self.tags:
 
@@ -79,8 +83,9 @@ class TaggedDoc(object):
 		result = []
 		expect = None
 		last_tag = None
-		for value,tag in tags:
+		for value, tag in tags:
 			if tag in ['PERSON','LOCATION','ORGANIZATION']:
+				value = value.encode('utf-8')
 				last_tag = tag
 				if (tag == expect) or (expect is None):
 					run.append(value)
